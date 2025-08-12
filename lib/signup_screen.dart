@@ -12,16 +12,19 @@ class _SignupScreenState extends State<SignupScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  Future<void> _signup() async {
+  void userauth() async{
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
-    } catch (e) {
-      print(e);
+    }
+    on FirebaseAuthException catch (e) {
+       print(e.message);
+
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +44,17 @@ class _SignupScreenState extends State<SignupScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+
               SizedBox(height: 20),
+
               TextField(
                 controller: _emailController,
+
                 style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   labelText: "Email",
                   labelStyle: TextStyle(color: Colors.white70),
                   enabledBorder: OutlineInputBorder(
@@ -56,12 +65,17 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
               ),
+
               SizedBox(height: 20),
+
               TextField(
                 controller: _passwordController,
-                obscureText: true,
+
                 style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   labelText: "Password",
                   labelStyle: TextStyle(color: Colors.white70),
                   enabledBorder: OutlineInputBorder(
@@ -72,11 +86,13 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: _signup,
-                child: Text("Signup"),
-              ),
+
+              SizedBox(height: 40),
+
+              ElevatedButton(onPressed: () {
+                userauth();
+
+              }, child: Text("Signup")),
             ],
           ),
         ),

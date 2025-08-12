@@ -14,13 +14,17 @@ class HomeScreen extends StatelessWidget {
           IconButton(
             onPressed: () => FirebaseAuth.instance.signOut(),
             icon: const Icon(Icons.logout),
-          )
+          ),
         ],
       ),
       body: const Center(
         child: Text(
           "Home Screen",
-          style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
