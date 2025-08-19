@@ -7,21 +7,17 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueGrey,
       appBar: AppBar(
-        title: const Text("Home"),
-        actions: [
-          IconButton(
-            onPressed: () => FirebaseAuth.instance.signOut(),
-            icon: const Icon(Icons.logout),
-          ),
-        ],
+        title: Center(child: const Text("Home Screen"),
+
+        ),
+
       ),
       body: const Center(
         child: Text(
           "Home Screen",
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.white70,
             fontSize: 30,
             fontWeight: FontWeight.bold,
           ),

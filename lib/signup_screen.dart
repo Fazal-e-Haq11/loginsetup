@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:loginsetup/const.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -11,88 +12,79 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool loading = false;
 
-  void userauth() async{
+  Future<void> userauth() async {
+    setState(() => loading = true);
+
     try {
-      final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
-    }
-    on FirebaseAuthException catch (e) {
-       print(e.message);
 
+      if (!mounted) return;
+      setState(() => loading = false);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Signup Successful ✅")),
+      );
+
+      // Optional: Redirect to Login or Home
+      // Navigator.pushReplacementNamed(context, '/LoginScreen');
+
+    } on FirebaseAuthException catch (e) {
+      setState(() => loading = false);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.message ?? "Signup failed")),
+      );
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueGrey,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 "Signup",
                 style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 32,
+                  color: Colors.black,
+                  fontSize: 50,
                   fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
                 ),
               ),
 
-              SizedBox(height: 20),
+              const SizedBox(height: 50),
 
-              TextField(
-                controller: _emailController,
-
-                style: TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  labelText: "Email",
-                  labelStyle: TextStyle(color: Colors.white70),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white70),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                ),
+              MyField(
+                Hinttext: 'Email',
+                icon: Icons.email,
+                controller: _emailController, // ✅ fixed
               ),
 
-              SizedBox(height: 20),
+              const SizedBox(height: 50),
 
-              TextField(
-                controller: _passwordController,
-
-                style: TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  labelText: "Password",
-                  labelStyle: TextStyle(color: Colors.white70),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white70),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                ),
+              MyField(
+                Hinttext: 'Password',
+                icon: Icons.lock,
+                controller: _passwordController, // ✅ fixed
               ),
 
-              SizedBox(height: 40),
+              const SizedBox(height: 100),
 
-              ElevatedButton(onPressed: () {
-                userauth();
-
-              }, child: Text("Signup")),
+              loading
+                  ? const CircularProgressIndicator()
+                  : Mybutton(
+                text: 'Signup',
+                onpress: userauth,
+              ),
             ],
           ),
         ),
